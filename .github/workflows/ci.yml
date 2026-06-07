@@ -31,10 +31,13 @@ jobs:
       - name: Generate coverage report
         run: |
           cd _build
-          # Запускаем lcov с игнорированием ошибок, если файлов пока нет
-          lcov --directory . --capture --output-file coverage.info --ignore-errors empty
+          # Игнорируем ошибки mismatch и unexecuted block
+          lcov --directory . --capture --output-file coverage.info \
+               --ignore-errors empty,mismatch,unexecuted \
+               --rc geninfo_unexecuted_blocks=1
           # Убираем системные файлы
-          lcov --remove coverage.info '/usr/*' '*/tests/*' '*/third-party/*' --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/tests/*' '*/third-party/*' \
+               --output-file coverage.info --ignore-errors unused
           # Выводим статистику
           lcov --list coverage.info
 
@@ -43,3 +46,4 @@ jobs:
         with:
           file: _build/coverage.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          format: lcov
