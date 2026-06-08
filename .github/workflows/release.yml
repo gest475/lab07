@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*' # Скрипт будет запускаться только тогда, когда мы пушим тег версии (например v0.1.0.0)
+      - 'v*'
 
 jobs:
   build_packages:
@@ -27,6 +27,9 @@ jobs:
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        files: _build/banking-*.tar.gz
+        files: |
+          _build/*.tar.gz
+          _build/*.deb
+          _build/*.rpm
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
